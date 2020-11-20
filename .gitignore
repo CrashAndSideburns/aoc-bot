@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# pipenv files
+Pipfile
+Pipfile.lock
+
+# json cache
+cache
+
+#SQL database
+data.db
