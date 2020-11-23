@@ -4,7 +4,6 @@ from discord.ext.commands.cooldowns import BucketType
 
 import leaderboard as lb
 import database
-import embed_functions as ef
 
 class LeaderboardCommands(commands.Cog):
     def __init__(self, client):
@@ -16,7 +15,7 @@ class LeaderboardCommands(commands.Cog):
         owner_id = database.get_owner_id(self.client.db, ctx.guild.id)
         session_cookie = database.get_session_cookie(self.client.db, ctx.guild.id)
         leaderboard = lb.Leaderboard(owner_id, session_cookie)
-        await ctx.send(embed = await ef.make_embed(self.client, ctx, leaderboard.get()))
+        await ctx.send(embed = await leaderboard.make_embed(ctx, self.client, from_cached=False))
 
     @leaderboard.error
     async def leaderboard_error(self, ctx, error):
@@ -24,7 +23,7 @@ class LeaderboardCommands(commands.Cog):
             owner_id = database.get_owner_id(self.client.db, ctx.guild.id)
             session_cookie = database.get_session_cookie(self.client.db, ctx.guild.id)
             leaderboard = lb.Leaderboard(owner_id, session_cookie)
-            await ctx.send(embed = await ef.make_embed(self.client, ctx, leaderboard.get_cached()))
+            await ctx.send(embed = await leaderboard.make_embed(ctx, self.client, from_cached=True))
 
     @commands.command()
     async def link(self, ctx, aoc_id):
