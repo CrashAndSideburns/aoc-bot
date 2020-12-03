@@ -40,13 +40,13 @@ class Leaderboard:
         leaderboard = requests.get(self.__url(), cookies=self.__package_cookie()).json()
         with open(f"cache/{self.__owner_id}.json","w") as f:
             json.dump(leaderboard, f)
-        members = [Member(leaderboard["members"][id]) for id in leaderboard["members"]]
+        members = sorted([Member(leaderboard["members"][id]) for id in leaderboard["members"]], key=lambda m: m.local_score, reverse=True)
         return {"owner_id":leaderboard["owner_id"], "event":leaderboard["event"], "members":members}
 
     def __get_cached(self):
         with open(f"cache/{self.__owner_id}.json","r") as f:
             leaderboard = json.load(f)
-            members = [Member(leaderboard["members"][id]) for id in leaderboard["members"]]
+            members = sorted([Member(leaderboard["members"][id]) for id in leaderboard["members"]], key=lambda m: m.local_score, reverse=True)
             return {"owner_id":leaderboard["owner_id"], "event":leaderboard["event"], "members":members}
 
     async def make_embed(self, ctx, client, from_cached=True):
